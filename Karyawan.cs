@@ -4,38 +4,58 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tugas_3
+namespace Tugas_Kelompok_PBO
 {
-    public class Karyawan
+    internal abstract class Karyawan
     {
-        private string nip;
-        private string nama;
-        private string alamat;
-        public Karyawan(string nip, string nama, string alamat)
+        public string NIP, Nama, Alamat;
+        public double gapok, hnrLembur;
+        public int jmlHari;
+        public Jabatan Posisi;
+        public Karyawan(string nip, string nama, string alamat, Jabatan posisi, double gajiPokok, double honorLembur, int jumlahHari)
         {
-            this.nip = nip;
-            this.nama = nama;
-            this.alamat = alamat;
+            this.NIP = nip;
+            this.Nama = nama;
+            this.Alamat = alamat;
+            this.Posisi = posisi;
+            this.gapok = gajiPokok;
+            this.hnrLembur = honorLembur;
+            this.jmlHari = jumlahHari;
         }
-        public string getNip()
+        public abstract double GetGaji();
+        public void showKaryawan()
         {
-            return nip;
+            Console.WriteLine($"{NIP}\t{Nama}\t{Posisi}\t{GetGaji().ToString("N0")}");
         }
-        public string getNama()
+        public void writeKaryawan(string path)
         {
-            return nama;
+            if (!File.Exists(path))
+            {
+                using (StreamWriter sw = new StreamWriter(path))
+                {
+                    sw.WriteLine($"{NIP}\t{Nama}\t{Posisi}\t{GetGaji().ToString("N0")}");
+                }
+            }
+            else
+            {
+                using (StreamWriter s = new StreamWriter(path))
+                {
+                    s.WriteLine($"{NIP}\t{Nama}\t{Posisi}\t{GetGaji().ToString("N0")}");
+                }
+            }
         }
-        public string getAlamat()
+        public void readKaryawan(string path)
         {
-            return alamat;
-        }
-        public void setAlamat(string newAlamat)
-        {
-            this.alamat = newAlamat;
-        }
-        public virtual double hitGaji(double gapok, double tunjangan)
-        {
-            return gapok + tunjangan;
+            if (File.Exists(path))
+            {
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    while (sr.ReadLine != null)
+                    {
+                        Console.WriteLine(sr.ReadLine());
+                    }
+                }
+            }
         }
     }
 }
